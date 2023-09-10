@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "open-interpreter"
+name = "open-interpreter-bmo"
 packages = [
     {include = "interpreter"},
 ]
 version = "0.1.2"
 description = "Let language models run code locally."
-authors = ["Killian Lucas <killian@drinkwater.ai>"]
+authors = ["Killian Lucas <killian@drinkwater.ai>", "Silver"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
