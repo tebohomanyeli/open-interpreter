@@ -1,3 +1,4 @@
+
 #------------------------------------------------------------------------------Imports
 import os
 import time
@@ -63,12 +64,10 @@ class Interpreter:
     # This makes gpt-4 better aligned with Open Interpreters priority to be easy to use.
     self.llama_instance = None
 
-
   def cli(self):
     # The cli takes the current instance of Interpreter,
     # modifies it according to command line flags, then runs chat.
     cli(self)
-
 
   def get_info_for_system_message(self):
     """
@@ -118,7 +117,6 @@ class Interpreter:
 
     return info
 
-
   def reset(self):
     self.messages = []
     self.code_interpreters = {}
@@ -126,7 +124,6 @@ class Interpreter:
 
   def load(self, messages):
     self.messages = messages
-
 
   def chat(self, message=None, return_messages=False):
 
@@ -321,7 +318,6 @@ class Interpreter:
     if self.active_block:
       self.active_block.end()
       self.active_block = None
-
 
   def respond(self):
     # Add relevant info to system_message

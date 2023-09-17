@@ -63,12 +63,10 @@ class Interpreter:
     # This makes gpt-4 better aligned with Open Interpreters priority to be easy to use.
     self.llama_instance = None
 
-
   def cli(self):
     # The cli takes the current instance of Interpreter,
     # modifies it according to command line flags, then runs chat.
     cli(self)
-
 
   def get_info_for_system_message(self):
     """
@@ -118,7 +116,6 @@ class Interpreter:
 
     return info
 
-
   def reset(self):
     self.messages = []
     self.code_interpreters = {}
@@ -126,7 +123,6 @@ class Interpreter:
 
   def load(self, messages):
     self.messages = messages
-
 
   def chat(self, message=None, return_messages=False):
 
@@ -239,89 +235,64 @@ class Interpreter:
     Makes sure we have an AZURE_API_KEY or OPENAI_API_KEY.
     """
     if self.use_azure:
-      all_env_available = (
-        ('AZURE_API_KEY' in os.environ or 'OPENAI_API_KEY' in os.environ) and
-        'AZURE_API_BASE' in os.environ and
-        'AZURE_API_VERSION' in os.environ and
-        'AZURE_DEPLOYMENT_NAME' in os.environ)
-      if all_env_available:
-        self.api_key = os.environ.get('AZURE_API_KEY') or os.environ['OPENAI_API_KEY']
-        self.azure_api_base = os.environ['AZURE_API_BASE']
-        self.azure_api_version = os.environ['AZURE_API_VERSION']
-        self.azure_deployment_name = os.environ['AZURE_DEPLOYMENT_NAME']
-        self.azure_api_type = os.environ.get('AZURE_API_TYPE', 'azure')
-      else:
-        # This is probably their first time here!
-        print('', Markdown("**Welcome to Open Interpreter.**"), '')
-        time.sleep(1)
+        all_env_available = (
+            ('AZURE_API_KEY' in os.environ or 'OPENAI_API_KEY' in os.environ) and
+            'AZURE_API_BASE' in os.environ and
+            'AZURE_API_VERSION' in os.environ and
+            'AZURE_DEPLOYMENT_NAME' in os.environ)
 
-        print(Rule(style="white"))
+        if all_env_available:
+            self.api_key = os.environ.get('AZURE_API_KEY') or os.environ['OPENAI_API_KEY']
+            self.azure_api_base = os.environ['AZURE_API_BASE']
+            self.azure_api_version = os.environ['AZURE_API_VERSION']
+            self.azure_deployment_name = os.environ['AZURE_DEPLOYMENT_NAME']
+            self.azure_api_type = os.environ.get('AZURE_API_TYPE', 'azure')
 
-        print(Markdown(missing_azure_info_message), '', Rule(style="white"), '')
-        response = input("Azure OpenAI API key: ")
+        else:
+            # This is probably their first time here!
+            print('', Markdown("**Welcome to Open Interpreter.**"), '')
+            time.sleep(1)
+
+            print(Rule(style="white"))
+
+            print(Markdown(missing_azure_info_message), '', Rule(style="white"), '')
+            response = input("Azure OpenAI API key: ")
 
         if response == "":
-          # User pressed `enter`, requesting Code-Llama
-          self.local = True
+            # User pressed `enter`, requesting Code-Llama
+            self.local = True
 
-          print(Markdown(
-            "> Switching to `Code-Llama`...\n\n**Tip:** Run `interpreter --local` to automatically use `Code-Llama`."),
-                '')
-          time.sleep(2)
-          print(Rule(style="white"))
-          return
+            print(Markdown(
+                "> Switching to `Code-Llama`...\n\n**Tip:** Run `interpreter --local` to automatically use `Code-Llama`."),
+                    '')
+            time.sleep(2)
+            print(Rule(style="white"))
+            return
 
         else:
-          self.api_key = response
-          self.azure_api_base = input("Azure OpenAI API base: ")
-          self.azure_deployment_name = input("Azure OpenAI deployment name of GPT: ")
-          self.azure_api_version = input("Azure OpenAI API version: ")
-          print('', Markdown(
-            "**Tip:** To save this key for later, run `export AZURE_API_KEY=your_api_key AZURE_API_BASE=your_api_base AZURE_API_VERSION=your_api_version AZURE_DEPLOYMENT_NAME=your_gpt_deployment_name` on Mac/Linux or `setx AZURE_API_KEY your_api_key AZURE_API_BASE your_api_base AZURE_API_VERSION your_api_version AZURE_DEPLOYMENT_NAME your_gpt_deployment_name` on Windows."),
-                '')
-          time.sleep(2)
-          print(Rule(style="white"))
+            self.api_key = response
+            self.azure_api_base = input("Azure OpenAI API base: ")
+            self.azure_deployment_name = input("Azure OpenAI deployment name of GPT: ")
+            self.azure_api_version = input("Azure OpenAI API version: ")
+            print('', Markdown(
+                "**Tip:** To save this key for later, run `export AZURE_API_KEY=your_api_key AZURE_API_BASE=your_api_base AZURE_API_VERSION=your_api_version AZURE_DEPLOYMENT_NAME=your_gpt_deployment_name` on Mac/Linux or `setx AZURE_API_KEY your_api_key AZURE_API_BASE your_api_base AZURE_API_VERSION your_api_version AZURE_DEPLOYMENT_NAME your_gpt_deployment_name` on Windows."),
+                    '')
+            time.sleep(2)
+            print(Rule(style="white"))
 
-      openai.api_type = self.azure_api_type
-      openai.api_base = self.azure_api_base
-      openai.api_version = self.azure_api_version
-      openai.api_key = self.api_key
-    else:
-      if self.api_key == None:
-        if 'OPENAI_API_KEY' in os.environ:
-          self.api_key = os.environ['OPENAI_API_KEY']
-        else:
-          # This is probably their first time here!
-          print('', Markdown("**Welcome to Open Interpreter.**"), '')
-          time.sleep(1)
+        openai.api_type = self.azure_api_type
+        openai.api_base = self.azure_api_base
+        openai.api_version = self.azure_api_version
+        openai.api_key = self.api_key
 
-          print(Rule(style="white"))
 
-          print(Markdown(missing_api_key_message), '', Rule(style="white"), '')
-          response = input("OpenAI API key: ")
 
-          if response == "":
-              # User pressed `enter`, requesting Code-Llama
-              self.local = True
-              print(Markdown("> Switching to `Code-Llama`...\n\n**Tip:** Run `interpreter --local` to automatically use `Code-Llama`."), '')
-              time.sleep(2)
-              print(Rule(style="white"))
-              return
-
-          else:
-              self.api_key = response
-              print('', Markdown("**Tip:** To save this key for later, run `export OPENAI_API_KEY=your_api_key` on Mac/Linux or `setx OPENAI_API_KEY your_api_key` on Windows."), '')
-              time.sleep(2)
-              print(Rule(style="white"))
-
-      openai.api_key = self.api_key
 
 
   def end_active_block(self):
     if self.active_block:
       self.active_block.end()
       self.active_block = None
-
 
   def respond(self):
     # Add relevant info to system_message
