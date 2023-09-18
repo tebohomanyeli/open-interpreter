@@ -15,18 +15,18 @@ from rich.markdown import Markdown
 from rich.rule import Rule
 
 #------------------------------------------------------------------------------Local Files
-from .cli import cli
-from .utils import merge_deltas, parse_partial_json
-from .message_block import MessageBlock
-from .code_block import CodeBlock
-from .code_interpreter import CodeInterpreter
-from .llama_2 import get_llama_2_instance
+from ..cli import cli
+from ..utils import merge_deltas, parse_partial_json
+from ..message_block import MessageBlock
+from ..code_block import CodeBlock
+from ..code_interpreter import CodeInterpreter
+from ..llama_2 import get_llama_2_instance
 
 #------------------------------------------------------------------------------Subdirectory
-from .interpreter_components.cli_messages import missing_api_key_message
-from .interpreter_components.cli_messages import missing_azure_info_message
-from .interpreter_components.cli_messages import confirm_mode_message
-from .interpreter_components.model_schema import function_schema
+from ..interpreter_components.cli_messages import missing_api_key_message
+from ..interpreter_components.cli_messages import missing_azure_info_message
+from ..interpreter_components.cli_messages import confirm_mode_message
+from ..interpreter_components.model_schema import function_schema
 
 class Interpreter:
 
